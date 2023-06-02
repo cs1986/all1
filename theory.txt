@@ -1,0 +1,878 @@
+1----------------------------------------------------------------------------------------------
+Data Wrangling, I
+Perform the following operations using Python on any open source dataset (e.g., data.csv)
+1. Import all the required Python Libraries.
+2. Locate an open source data from the web (e.g., https://www.kaggle.com). Provide a clear
+ description of the data and its source (i.e., URL of the web site).
+3. Load the Dataset into pandas dataframe.
+4. Data Preprocessing: check for missing values in the data using pandas isnull(), describe()
+function to get some initial statistics. Provide variable descriptions. Types of variables etc.
+Check the dimensions of the data frame.
+5. Data Formatting and Data Normalization: Summarize the types of variables by checking
+the data types (i.e., character, numeric, integer, factor, and logical) of the variables in the
+data set. If variables are not in the correct data type, apply proper type conversions.
+6. Turn categorical variables into quantitative variables in Python.
+In addition to the codes and outputs, explain every operation that you do in the above steps and
+explain everything that you do to import/read/scrape the data set.
+///
+Sure! Let's go through the program step by step:
+
+1. Importing the necessary libraries:
+```python
+import pandas as pd
+from sklearn import preprocessing
+```
+The program starts by importing the `pandas` library for data manipulation and the `preprocessing` module from `sklearn` (Scikit-learn) library for data preprocessing.
+
+2. Loading the data:
+```python
+df = pd.read_csv('iris.csv')
+```
+The program reads the data from a CSV file called 'iris.csv' and stores it in a pandas DataFrame called `df`.
+
+3. Displaying the first 10 rows of the DataFrame:
+```python
+print(df.head(10))
+```
+The program prints the first 10 rows of the DataFrame `df` using the `head()` function.
+
+4. Checking for missing values:
+```python
+print(df.isna().sum())
+```
+The program checks for missing values in the DataFrame `df` using the `isna()` function, which returns a DataFrame of the same shape indicating whether each element is missing, and `sum()` is applied to count the missing values for each column.
+
+5. Displaying the data types of columns:
+```python
+print(df.dtypes)
+```
+The program prints the data types of each column in the DataFrame using the `dtypes` attribute.
+
+6. Converting a column to integer data type:
+```python
+df['PetalLengthCm'] = df['PetalLengthCm'].astype("int")
+```
+The program converts the 'PetalLengthCm' column in the DataFrame `df` to integer data type using the `astype()` function.
+
+7. Displaying the updated data types:
+```python
+print(df.dtypes)
+```
+The program prints the updated data types of each column in the DataFrame.
+
+8. Normalizing a column using Min-Max scaling:
+```python
+x = df[['SepalLengthCm']].values.astype(float)
+min_max_scaler = preprocessing.MinMaxScaler()
+x_scaled = min_max_scaler.fit_transform(x)
+df_normalized = pd.DataFrame(x_scaled)
+print(df_normalized.head(10))
+```
+The program selects the 'SepalLengthCm' column from the DataFrame `df` and converts it to a NumPy array. Then, it applies Min-Max scaling using `preprocessing.MinMaxScaler()` to scale the values between 0 and 1. The scaled values are then converted back to a DataFrame and displayed.
+
+9. Displaying unique values in a column:
+```python
+print(df['Species'].unique())
+```
+The program prints the unique values present in the 'Species' column of the DataFrame `df` using the `unique()` function.
+
+10. Encoding categorical variables using LabelEncoder:
+```python
+label_encoder = preprocessing.LabelEncoder()
+df['Species'] = label_encoder.fit_transform(df['Species'])
+print(df['Species'].unique())
+```
+The program uses `preprocessing.LabelEncoder()` to encode the categorical values in the 'Species' column of the DataFrame `df` into numerical labels. The encoded values are then printed.
+
+11. Encoding categorical variables using One-Hot encoding:
+```python
+features_df = df.drop(columns=['Species'])
+enc = preprocessing.OneHotEncoder()
+enc_df = pd.DataFrame(enc.fit_transform(df[['Species']]))
+df_encode = features_df.join(enc_df)
+df_encode.rename(columns={0: 'Iris-Setosa', 1: 'Iris-Versicolor', 2: 'Iris-virginica'}, inplace=True)
+print(df_encode.tail(40))
+```
+The program creates a new DataFrame `features_df` by dropping the 'Species' column from the original DataFrame `df`. It then uses `preprocessing.OneHotEncoder()` to perform one-hot
+
+ encoding on the 'Species' column and stores the encoded values in `enc_df`. Finally, it joins `features_df` with `enc_df`, renames the encoded columns, and displays the resulting DataFrame.
+
+12. Encoding categorical variables using get_dummies:
+```python
+one_hot_df = pd.get_dummies(df, prefix="Species", columns=['Species'], drop_first=False)
+print(one_hot_df.head(20), one_hot_df.tail(20))
+```
+The program uses `pd.get_dummies()` to perform one-hot encoding on the 'Species' column of the DataFrame `df`. It creates new columns for each unique category with binary values indicating the presence of each category. The resulting DataFrame `one_hot_df` is then displayed.
+
+That's the explanation of the provided program! It covers various data preprocessing techniques such as handling missing values, converting data types, normalization, and encoding categorical variables using different methods.
+
+///
+Certainly! Here are some questions and answers related to the different points in the provided program:
+
+1. What is the purpose of `pd.read_csv('iris.csv')`?
+- The `pd.read_csv('iris.csv')` function is used to read data from a CSV file named 'iris.csv' and store it in a pandas DataFrame.
+
+2. Why do we use the `head(10)` function in `print(df.head(10))`?
+- The `head(10)` function is used to display the first 10 rows of the DataFrame `df`. It provides a quick preview of the data.
+
+3. How can we check for missing values in a DataFrame?
+- The `.isna().sum()` function is used to check for missing values in each column of the DataFrame. It returns a count of missing values for each column.
+
+4. What does `df.dtypes` represent?
+- `df.dtypes` returns the data types of each column in the DataFrame. It provides information about the type of data stored in each column, such as integer, float, or object.
+
+5. What is the purpose of `astype("int")` in `df['PetalLengthCm'] = df['PetalLengthCm'].astype("int")`?
+- `astype("int")` is used to convert the 'PetalLengthCm' column of the DataFrame `df` from its original data type to integer. It allows you to change the data type of a specific column.
+
+6. Why do we use Min-Max scaling on the 'SepalLengthCm' column?
+- Min-Max scaling is used to normalize the values of a numerical column between a specified range (usually 0 and 1). It ensures that all the values are on a similar scale, which is important for certain machine learning algorithms.
+
+7. What does `df['Species'].unique()` do?
+- `df['Species'].unique()` returns an array of unique values present in the 'Species' column of the DataFrame `df`. It provides a list of distinct categories or classes present in that column.
+
+8. How does LabelEncoder work in `label_encoder.fit_transform(df['Species'])`?
+- `LabelEncoder` is used to encode categorical values into numerical labels. In this case, it assigns a unique numerical label to each unique category in the 'Species' column of the DataFrame `df`. The encoded values are obtained using the `fit_transform()` method.
+
+9. What is the purpose of One-Hot encoding in `pd.get_dummies(df, prefix="Species", columns=['Species'], drop_first=False)`?
+- One-Hot encoding is a technique used to represent categorical variables as binary vectors. In this program, `pd.get_dummies()` is used to perform One-Hot encoding on the 'Species' column of the DataFrame `df`. It creates new columns for each unique category and assigns binary values to indicate the presence or absence of each category.
+
+These questions and answers provide an overview of the purpose and functionality of different parts of the program. Feel free to ask if you have any further questions or need more clarification on any specific point.
+///
+Data preprocessing, formatting, and normalization are crucial steps in preparing data for analysis or machine learning tasks. Here is a brief explanation of each concept:
+
+1. Data Preprocessing:
+Data preprocessing involves transforming raw data into a format that is suitable for analysis. It typically includes steps such as handling missing values, dealing with outliers, handling categorical variables, and feature scaling.
+
+2. Formatting:
+Formatting refers to organizing and structuring the data in a consistent manner. It involves tasks like ensuring consistent column names, converting data types to the appropriate format, and rearranging the data if needed.
+
+3. Normalization:
+Normalization is a technique used to scale numerical data to a common range or distribution. It ensures that different features or variables have similar scales, which is important for certain algorithms that are sensitive to the magnitude of the input variables. Common normalization techniques include Min-Max scaling (scaling values between 0 and 1) and Z-score normalization (standardizing values to have zero mean and unit variance).
+
+By performing data preprocessing, formatting, and normalization, we can enhance the quality and reliability of our data, making it more suitable for analysis or machine learning tasks.
+///
+which dataset use in this program
+In the provided program, the dataset used is the "iris.csv" dataset. It is a commonly used dataset in machine learning and data analysis tasks. The dataset contains measurements of various attributes of iris flowers (sepal length, sepal width, petal length, and petal width) along with their corresponding species (setosa, versicolor, and virginica). The purpose of the program is to demonstrate various data preprocessing techniques using this iris dataset.
+2----------------------------------------------------------------------------------------------
+Data Wrangling II
+Create an “Academic performance” dataset of students and perform the following operations using
+Python.
+1. Scan all variables for missing values and inconsistencies. If there are missing values and/or
+inconsistencies, use any of the suitable techniques to deal with them.
+2. Scan all numeric variables for outliers. If there are outliers, use any of the suitable
+techniques to deal with them.
+3. Apply data transformations on at least one of the variables. The purpose of this
+transformation should be one of the following reasons: to change the scale for better
+understanding of the variable, to convert a non-linear relation into a linear one, or to
+decrease the skewness and convert the distribution into a normal distribution.
+Reason and document your approach properly.
+//
+Sure! Let's go through the program step by step:
+
+1. The program starts by importing necessary libraries: `pandas` for data manipulation, `numpy` for numerical operations, and `matplotlib.pyplot` for data visualization. It also imports the `stats` module from `scipy` for statistical calculations.
+
+2. The program reads a CSV file named 'StudentsPerformance.csv' into a DataFrame `df` using the `read_csv` function from `pandas`.
+
+3. It prints the DataFrame `df` to display the data.
+
+4. It uses the `isnull` function to check for missing values in the DataFrame `df` and prints the result, which shows `True` for missing values and `False` for non-missing values.
+
+5. It creates a Boolean series `series` that checks if the 'Math_Score' column in `df` has missing values.
+
+6. It prints the rows in `df` where the 'Math_Score' is missing.
+
+7. It uses the `notnull` function to check for non-missing values in the DataFrame `df` and prints the result.
+
+8. It assigns the DataFrame `ndf` to `df`.
+
+9. It creates a new DataFrame `col_drop` by dropping columns with missing values using the `dropna` function with `axis=1`.
+
+10. It prints the new DataFrame `col_drop`.
+
+11. It creates a new DataFrame `row_drop` by dropping rows with any missing values using the `dropna` function with `axis=0` and `how='any'`.
+
+12. It prints the new DataFrame `row_drop`.
+
+13. It creates a list of column names `col` containing 'Math_Score', 'Reading_Score', 'Writing_Score', and 'Placement_Score'. It then creates a boxplot of these columns using the `boxplot` function from `matplotlib.pyplot`.
+
+14. It uses the `np.where` function to find the indices where 'Math_Score' is greater than 90 and prints the result.
+
+15. It uses the `np.where` function to find the indices where 'Reading_Score' is less than 25 and prints the result.
+
+16. It uses the `np.where` function to find the indices where 'Writing_Score' is less than 30 and prints the result.
+
+17. It creates a scatter plot of 'Placement_Score' versus 'Placement_Offer_Count' using the `scatter` function from `matplotlib.pyplot`.
+
+18. It uses the `np.where` function to find the indices where 'Placement_Score' is less than 50 and prints the result.
+
+19. It uses the `np.where` function to find the indices where 'Placement_Score' is greater than 85 and prints the result.
+
+20. It calculates the z-scores for the 'Math_Score' column using the `zscore` function from `scipy.stats` and assigns it to `z`.
+
+21. It sets a threshold value of 0.18.
+
+22. It uses the `np.where` function to find the indices of data points where the z-score is less than the threshold and assigns them to `sample_outliers`.
+
+23. It prints the indices of the sample outliers.
+
+24. It removes the outliers from the DataFrame `df` by iterating over `sample_outliers` and using the `drop` function with `inplace=True`.
+
+25. It plots a histogram of the 'Math_Score' column.
+
+26. It creates a new column 'log_math' in the DataFrame `df` by taking the logarithm (base 10) of the 'Math_Score' column.
+
+27. It plots a histogram of the 'log_math' column.
+
+The program performs various operations
+
+ such as checking for missing values, removing outliers, and transforming the data. It also visualizes the data using box plots, scatter plots, and histograms.
+//
+which type of dataset used in this program
+Based on the code provided, the program uses a dataset stored in a CSV file named 'StudentsPerformance.csv'. This dataset appears to contain information related to student performance, including scores in various subjects and placement-related data.
+3----------------------------------------------------------------------------------------------
+Descriptive Statistics - Measures of Central Tendency and variability
+Perform the following operations on any open source dataset (e.g., data.csv)
+1. Provide summary statistics (mean, median, minimum, maximum, standard deviation) for
+a dataset (age, income etc.) with numeric variables grouped by one of the qualitative
+(categorical) variable. For example, if your categorical variable is age groups and
+quantitative variable is income, then provide summary statistics of income grouped by the
+age groups. Create a list that contains a numeric value for each response to the categorical
+variable.
+2. Write a Python program to display some basic statistical details like percentile, mean,
+standard deviation etc. of the species of ‘Iris-setosa’, ‘Iris-versicolor’ and ‘Iris-versicolor’
+of iris.csv dataset.
+Provide the codes with outputs and explain everything that you do in this step.
+///
+This program demonstrates various operations using the Pandas library in Python. Let's go through it step by step:
+
+1. Importing necessary libraries:
+   - The `pandas` library is imported and assigned the alias `pd`.
+   - The program also imports the `datasets` module from `sklearn` (scikit-learn).
+
+2. Reading and displaying a CSV file:
+   - The program reads a CSV file named 'income.csv' using the `pd.read_csv()` function and assigns it to the variable `df1`.
+   - The `print()` function is used to display the first few rows of the DataFrame using the `head()` method.
+
+3. Unique values in a column:
+   - The program prints the unique values in the 'age_group' column of the DataFrame using the `unique()` method.
+
+4. Counting occurrences based on a column:
+   - The program groups the DataFrame by the 'age_group' column using the `groupby()` method and applies the `count()` function to each group.
+   - The result is a count of occurrences for each unique 'age_group'.
+
+5. Finding minimum and maximum values based on a column:
+   - The program groups the DataFrame by the 'age_group' column using `groupby()` and applies the `min()` and `max()` functions to each group.
+   - The result is the minimum and maximum values for each unique 'age_group'.
+
+6. Calculating mean values based on a column:
+   - The program groups the DataFrame by the 'age_group' column using `groupby()` and applies the `mean()` function to each group.
+   - The result is the mean value for each unique 'age_group'.
+
+7. Calculating standard deviation based on a column:
+   - The program groups the DataFrame by the 'age_group' column using `groupby()` and applies the `std()` function to each group.
+   - The result is the standard deviation for each unique 'age_group'.
+
+8. Descriptive statistics based on a column:
+   - The program groups the DataFrame by the 'age_group' column using `groupby()` and applies the `describe()` method to each group.
+   - The result is a summary of descriptive statistics (count, mean, standard deviation, minimum, 25%, 50%, and 75% percentiles, and maximum) for each unique 'age_group'.
+
+9. Loading and displaying the Iris dataset:
+   - The program loads the Iris dataset using the `load_iris()` function from the `datasets` module.
+   - The dataset is assigned to the variable `data`.
+
+10. Creating a DataFrame from the Iris dataset:
+    - The program creates a DataFrame named `df` using the Iris dataset's feature data.
+    - The column names are set using the `feature_names` attribute of the dataset.
+
+11. Adding a 'species' column to the DataFrame:
+    - The program adds a new column named 'species' to the DataFrame, which contains the target values from the Iris dataset.
+    - The `pd.Series()` function is used to create a Series from the target values.
+
+12. Unique values in the 'species' column:
+    - The program prints the unique values in the 'species' column of the DataFrame using the `unique()` method.
+
+13. Grouping and summarizing the DataFrame based on 'species':
+    - The program groups the DataFrame by the 'species' column using `groupby()`.
+    - The `print()` function is used to display the grouped DataFrame.
+
+14. Counting occurrences based on 'species':
+    - The program groups the DataFrame by the 'species' column using `groupby()` and applies the `count()` function to each group.
+    - The result is a count of occurrences for each unique 'species'.
+
+
+
+15. Finding minimum and maximum values based on 'species':
+    - The program groups the DataFrame by the 'species' column using `groupby()` and applies the `min()` and `max()` functions to each group.
+    - The result is the minimum and maximum values for each unique 'species'.
+
+16. Calculating mean values based on 'species':
+    - The program groups the DataFrame by the 'species' column using `groupby()` and applies the `mean()` function to each group.
+    - The result is the mean value for each unique 'species'.
+
+17. Calculating standard deviation based on 'species':
+    - The program groups the DataFrame by the 'species' column using `groupby()` and applies the `std()` function to each group.
+    - The result is the standard deviation for each unique 'species'.
+
+18. Descriptive statistics based on 'species' and a specific column:
+    - The program groups the DataFrame by the 'species' column using `groupby()` and applies the `describe()` method to a specific column.
+    - The result is a summary of descriptive statistics for the selected column, separately for each unique 'species'.
+
+The program demonstrates common data manipulation and analysis techniques using Pandas, such as loading data from a CSV file, grouping data, calculating summary statistics, and generating descriptive statistics. The second part of the program specifically showcases these operations on the Iris dataset.
+//
+which type of dataset used in this program
+This program uses two different datasets:
+
+1. 'income.csv' dataset:
+   - The program reads a CSV file named 'income.csv' using the `pd.read_csv()` function.
+   - Unfortunately, the details of the 'income.csv' dataset are not provided in the code snippet you shared. To understand the specific characteristics of this dataset, we would need to examine the contents of the CSV file itself.
+
+2. Iris dataset:
+   - The Iris dataset is a popular benchmark dataset in machine learning and is included in the scikit-learn library (`sklearn`).
+   - The program loads the Iris dataset using the `datasets.load_iris()` function from the `sklearn` library.
+   - The Iris dataset consists of measurements of sepals and petals of three different species of Iris flowers (Setosa, Versicolor, and Virginica).
+   - It is a multivariate dataset with four features: sepal length, sepal width, petal length, and petal width.
+   - The target variable is the species of the Iris flower, encoded as integers (0 for Setosa, 1 for Versicolor, and 2 for Virginica).
+   - The program creates a DataFrame using the feature data and adds a 'species' column containing the target values.
+
+In summary, the 'income.csv' dataset is a custom dataset whose details are not provided, and the Iris dataset is a well-known dataset included in the scikit-learn library.
+4----------------------------------------------------------------------------------------------
+Data Analytics I
+Create a Linear Regression Model using Python/R to predict home prices using Boston Housing
+Dataset (https://www.kaggle.com/c/boston-housing). The Boston Housing dataset contains
+information about various houses in Boston through different parameters. There are 506 samples
+and 14 feature variables in this dataset.
+The objective is to predict the value of prices of the house using the given features.
+
+//
+Sure! Let's go through the program step by step to understand what it does:
+
+1. Importing Required Libraries:
+   - The program starts by importing the necessary libraries: `matplotlib.pyplot`, `pandas`, `seaborn`, `numpy`, and the `load_boston` dataset from `sklearn.datasets`.
+
+2. Loading and Exploring the Boston Housing Dataset:
+   - The `load_boston()` function is used to load the Boston Housing dataset.
+   - `print(boston_dataset.keys())` prints the keys of the dataset, which include 'data', 'target', 'feature_names', 'DESCR', 'filename'.
+   - `data = pd.DataFrame(boston_dataset.data, columns=boston_dataset.feature_names)` creates a pandas DataFrame from the dataset's features and assigns the column names from `boston_dataset.feature_names`.
+   - `data.head()` displays the first few rows of the DataFrame to get an overview of the data.
+   - `data['Price'] = boston_dataset.target` adds a new column 'Price' to the DataFrame, which represents the target variable.
+   - `print(data.head())` displays the updated DataFrame.
+
+3. Analyzing the Data:
+   - `print(data.describe())` provides statistical summary of the data, including count, mean, standard deviation, minimum, quartiles, and maximum values for each column.
+   - `print(data.info())` provides information about the DataFrame, including the number of non-null values in each column and the data types.
+   - `print(data.isnull().sum())` checks for missing values by counting the number of null values in each column and prints the results.
+
+4. Visualizing the Data:
+   - `sns.displot(data['Price'], bins=30)` creates a histogram to visualize the distribution of the 'Price' variable using Seaborn.
+   - `plt.show()` displays the histogram plot.
+   - `correlation_matrix = data.corr().round(2)` computes the correlation coefficients between different features using the `.corr()` method of the DataFrame.
+   - `sns.heatmap(data=correlation_matrix, annot=True)` creates a heatmap to visualize the correlations between features using Seaborn.
+
+5. Scatter Plot of Selected Features:
+   - `plt.figure(figsize=(20, 5))` sets the figure size for the subsequent scatter plots.
+   - The loop iterates over the `features` list, which contains the column names 'LSTAT' and 'RM'.
+   - For each feature, a scatter plot is created using `plt.subplot()` with the corresponding feature as the x-axis and 'Price' as the y-axis.
+   - Titles, x-labels, and y-labels are added to each subplot.
+
+6. Data Preparation for Linear Regression:
+   - `X = pd.DataFrame(np.c_[data['LSTAT'], data['RM']], columns=['LSTAT', 'RM'])` creates a new DataFrame `X` with two columns: 'LSTAT' and 'RM', which are selected features for the regression.
+   - `Y = data['Price']` assigns the target variable 'Price' to the variable `Y`.
+
+7. Splitting Data into Training and Testing Sets:
+   - `train_test_split()` from `sklearn.model_selection` is used to split the data into training and testing sets.
+   - `X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=5)` performs the split, where 80% of the data is used for training and 20% for testing.
+   - The dimensions of the training and testing sets are printed using `print()`.
+
+8. Linear Regression Model:
+   - `model = LinearRegression()` creates
+
+ an instance of the LinearRegression model from `sklearn.linear_model`.
+   - `model.fit(X_train, Y_train)` trains the linear regression model using the training data.
+
+9. Model Evaluation:
+   - `y_pred = model.predict(X_test)` predicts the target variable using the trained model and the testing data.
+   - `mean_squared_error(Y_test, y_pred)` calculates the mean squared error between the actual and predicted values.
+   - `r2_score(Y_test, y_pred)` computes the coefficient of determination (R2 score) to evaluate the model's performance.
+   - The RMSE and R2 score are printed to assess the model's performance.
+
+10. Predicting New Data:
+    - `sample_data = [[6.89, 9.939]]` represents a sample data point with 'LSTAT' and 'RM' values.
+    - `price = model.predict(sample_data)` predicts the house price using the trained model and the sample data.
+    - The predicted selling price is formatted and printed using `print()`.
+
+Overall, the program loads and explores the Boston Housing dataset, visualizes the data, prepares it for linear regression, splits the data into training and testing sets, trains a linear regression model, evaluates the model's performance, and finally, uses the model to predict the price for a new sample data point.
+//
+which type of datased used in this program
+The dataset used in this program is the Boston Housing dataset. It is a widely used dataset for regression tasks and is available in the scikit-learn library (`sklearn.datasets`). The dataset contains information about various factors that might influence the median value of owner-occupied homes in Boston. 
+
+The dataset consists of the following components:
+- `data`: The feature matrix containing 506 instances (rows) and 13 features (columns) such as average number of rooms per dwelling (`RM`), percentage of lower status of the population (`LSTAT`), etc.
+- `target`: The target variable or response variable, which represents the median value of owner-occupied homes in thousands of dollars.
+- `feature_names`: The names of the features or columns in the `data` matrix.
+- `DESCR`: A detailed description of the dataset.
+- `filename`: The path to the location of the dataset file.
+
+The program loads the Boston Housing dataset using `load_boston()` from `sklearn.datasets` and creates a pandas DataFrame (`data`) to store the dataset's features and target variable. The feature names are assigned to the columns of the DataFrame using `boston_dataset.feature_names`. The target variable is added as a new column named 'Price' in the DataFrame.
+
+The program then proceeds to analyze and visualize the data, perform linear regression, and make predictions using the loaded Boston Housing dataset.
+5----------------------------------------------------------------------------------------------
+Data Analytics II
+1. Implement logistic regression using Python/R to perform classification on
+Social_Network_Ads.csv dataset.
+2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+on the given dataset.
+//
+This program is focused on performing logistic regression using the scikit-learn library in Python. Let's break down the code step by step:
+
+1. The necessary libraries are imported:
+   - `pandas` for data manipulation and analysis.
+   - `matplotlib.pyplot` for data visualization.
+   - `train_test_split` from `sklearn.model_selection` to split the dataset into training and testing sets.
+   - `confusion_matrix` from `sklearn.metrics` to calculate the confusion matrix.
+   - `LogisticRegression` from `sklearn.linear_model` for logistic regression modeling.
+
+2. The program reads a CSV file named 'social.csv' using `pd.read_csv()` and assigns the DataFrame to `df1`.
+
+3. Some initial exploratory operations are performed:
+   - `print(df1)` displays the entire DataFrame.
+   - `print(df1.head())` shows the first few rows of the DataFrame.
+   - `print(df1.describe())` provides summary statistics of the DataFrame.
+
+4. A scatter plot is created using the 'Age' column as the x-axis and the 'Purchased' column as the y-axis. This plot displays the relationship between age and the purchase decision.
+
+5. The data is split into a training set and a test set using `train_test_split()`. The 'Age' column is assigned to `X_train` and `X_test`, while the 'Purchased' column is assigned to `Y_train` and `Y_test`. The test set size is set to 20% of the entire dataset.
+
+6. A logistic regression model is created using `LogisticRegression()`, and it is trained using `fit()` with the training data.
+
+7. Predictions are made on the test set using `predict()` and stored in `Y_pred_sk`.
+
+8. Another scatter plot is created to visualize the actual values from the test set and the predicted values. The actual values are represented by blue dots, while the predicted values are represented by red dots.
+
+9. The accuracy of the logistic regression model is calculated and printed using `lr_model.score()`.
+
+10. The confusion matrix is calculated using `confusion_matrix()`. The values of true negatives, false negatives, true positives, and false positives are extracted and assigned to `tn`, `fn`, `tp`, and `fp`, respectively.
+
+11. The values from the confusion matrix are printed, displaying the true negatives, true positives, false positives, and false negatives.
+
+12. Accuracy is calculated as the percentage of correct predictions out of the total number of predictions and printed.
+
+13. Precision is calculated as the ratio of true positives to the sum of false positives and true positives. Precision is printed as a percentage.
+
+14. Recall (also known as sensitivity or true positive rate) is calculated as the ratio of true positives to the sum of true positives and false negatives. Recall is printed as a percentage.
+
+15. The error rate is calculated as the ratio of false positives and false negatives to the sum of true positives, false positives, true negatives, and false negatives. The error rate is printed as a percentage.
+
+In summary, this program loads a dataset, performs logistic regression on it, evaluates the model's performance using accuracy, precision, recall, and error rate, and visualizes the predictions using scatter plots.
+//
+The dataset used in this program is loaded from a CSV file named 'social.csv'. Without access to the actual file content, we can't determine the exact nature of the dataset. However, based on the code and the provided column names ('Age' and 'Purchased'), we can make some assumptions about the dataset.
+
+The dataset seems to be related to social media or marketing activities, where 'Age' represents the age of individuals and 'Purchased' likely indicates whether or not they made a purchase. From the code, it appears that the program is trying to predict the purchase decision based on age using logistic regression.
+
+To fully understand the dataset and its characteristics, it would be helpful to examine the actual content of the 'social.csv' file, including the column names, data types, and other relevant information.
+
+6----------------------------------------------------------------------------------------------
+Data Analytics III
+1. Implement Simple Naïve Bayes classification algorithm using Python/R on iris.csv dataset.
+2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+on the given dataset.
+//
+This program is an example of using the Naive Bayes classifier for classification tasks using the Iris dataset. Let's go through the code step by step to understand it in detail:
+
+1. Importing the necessary libraries:
+```python
+import pandas as pd
+```
+This line imports the pandas library, which is used for data manipulation and analysis.
+
+2. Loading the dataset:
+```python
+dataset = pd.read_csv('https://raw.githubusercontent.com/mk-gurucharan/Classification/master/IrisDataset.csv')
+```
+This line reads the Iris dataset from a CSV file hosted on GitHub and stores it in a pandas DataFrame called `dataset`.
+
+3. Preparing the data for classification:
+```python
+X = dataset.iloc[:, :4].values
+y = dataset['species'].values
+```
+Here, the input features are extracted from the dataset and stored in the variable `X`, while the target variable (species) is stored in the variable `y`.
+
+4. Printing the first five rows of the dataset:
+```python
+print(dataset.head(5))
+```
+This line prints the first five rows of the dataset to inspect the data.
+
+5. Splitting the data into training and testing sets:
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+```
+The `train_test_split` function from scikit-learn is used to split the dataset into training and testing sets. Here, 80% of the data is used for training (`X_train` and `y_train`), and 20% is used for testing (`X_test` and `y_test`).
+
+6. Feature scaling:
+```python
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+```
+Feature scaling is applied using the `StandardScaler` class from scikit-learn. This step standardizes the features by subtracting the mean and scaling to unit variance. It is essential for many machine learning algorithms to work properly.
+
+7. Creating and training the Naive Bayes classifier:
+```python
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+```
+Here, a Gaussian Naive Bayes classifier is created using the `GaussianNB` class from scikit-learn. The classifier is then trained on the training data (`X_train` and `y_train`).
+
+8. Making predictions on the test set:
+```python
+y_pred = classifier.predict(X_test)
+```
+The trained classifier is used to predict the species labels for the test set.
+
+9. Evaluating the model:
+```python
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+cm = confusion_matrix(y_test, y_pred)
+print("Accuracy: ", accuracy_score(y_test, y_pred))
+print(cm)
+```
+Several metrics are calculated to evaluate the performance of the model. The `confusion_matrix` function calculates a confusion matrix based on the true labels (`y_test`) and the predicted labels (`y_pred`). The `accuracy_score` function computes the accuracy of the model by comparing the true labels with the predicted labels. The confusion matrix and accuracy score are then printed.
+
+10. Comparing real values with predicted values:
+```python
+df = pd.DataFrame({'Real Values': y_test, 'Predicted Values': y_pred})
+print(df)
+```
+A pandas DataFrame is created to compare the true species labels with the predicted labels.
+
+11. Calculating error rate, precision, and recall:
+```python
+m = accuracy_score(y_test, y_pred)
+print("Error Rate: ", 
+
+1 - m)
+print("Precision: ", precision_score(y_test, y_pred, average='micro'))
+print("Recall Score: ", recall_score(y_test, y_pred, average='micro'))
+```
+The error rate is calculated as 1 minus the accuracy score. Precision and recall scores are also calculated using the `precision_score` and `recall_score` functions, respectively.
+
+In summary, this program loads the Iris dataset, splits it into training and testing sets, applies feature scaling, trains a Naive Bayes classifier, makes predictions on the test set, and evaluates the model's performance using various metrics.
+// 
+dataset
+The dataset used in this program is the Iris dataset. The Iris dataset is a well-known and commonly used dataset in machine learning and statistics. It consists of 150 samples of iris flowers from three different species: setosa, versicolor, and virginica. For each sample, four features are measured: sepal length, sepal width, petal length, and petal width. The goal of this dataset is to classify the iris flowers into their respective species based on these four features.
+
+The dataset is often used as a benchmark for classification tasks and is suitable for learning and practicing various classification algorithms. In this program, the Naive Bayes classifier is used to classify the iris flowers into their species based on the provided features.
+7----------------------------------------------------------------------------------------------
+Text Analytics
+1. Extract Sample document and apply following document preprocessing methods:
+Tokenization, POS Tagging, stop words removal, Stemming and Lemmatization.
+2. Create representation of document by calculating Term Frequency and Inverse Document
+Frequency.
+//
+Sure! Let's go through the program step by step to explain what it does.
+
+1. Importing necessary libraries:
+   ```
+   import nltk
+   import matplotlib.pyplot as plt
+   ```
+
+   Here, the program imports the `nltk` library, which stands for Natural Language Toolkit. It is a powerful library for natural language processing tasks. The `matplotlib.pyplot` library is imported for data visualization.
+
+2. Downloading required resources:
+   ```
+   nltk.download("punkt")
+   nltk.download('stopwords')
+   nltk.download('wordnet')
+   nltk.download('averaged_perceptron_tagger')
+   ```
+
+   The program downloads some resources needed by the NLTK library. These resources include tokenizers, stopwords, wordnet, and part-of-speech tagger.
+
+3. Tokenization:
+   ```
+   from nltk.tokenize import sent_tokenize, word_tokenize
+
+   text = "Hello Mr. Smith, how are you doing today? The weather is great, and the city is awesome. The sky is pinkish - blue. You should not eat cardboard."
+
+   tokenized_text = sent_tokenize(text)
+   print(tokenized_text)
+   print("\n")
+
+   tokenized_word = word_tokenize(text)
+   print(tokenized_word)
+   print("\n")
+   ```
+
+   In this part, the program tokenizes the given text into sentences using `sent_tokenize()` and into words using `word_tokenize()`. The resulting tokenized sentences and words are printed.
+
+4. Frequency Distribution:
+   ```
+   from nltk.probability import FreqDist
+
+   fdist = FreqDist(tokenized_word)
+   print(fdist)
+   print("\n")
+
+   fdist.plot(30, cumulative=False)
+   plt.show()
+   ```
+
+   Here, the program creates a frequency distribution of the tokenized words using `FreqDist()`. It then prints the frequency distribution and generates a plot showing the most common 30 words and their frequencies using `plot()` and `show()` functions from `matplotlib.pyplot`.
+
+5. Part-of-speech tagging:
+   ```
+   tokens = nltk.word_tokenize(sent)
+   print(tokens)
+   print("\n")
+
+   nltk.pos_tag(tokens)
+   ```
+
+   In this part, the program tokenizes a sentence into words and assigns part-of-speech tags to each word using `pos_tag()` function from NLTK. The resulting tokens and their respective tags are printed.
+
+6. Stopword Removal:
+   ```
+   from nltk.corpus import stopwords
+
+   stop_words = set(stopwords.words("english"))
+   print(stop_words)
+   print("\n")
+
+   filtered_sent = []
+   for w in tokenized_text:
+       if w not in stop_words:
+           filtered_sent.append(w)
+   print("Tokenized Sentence:", tokenized_text)
+   print("\n")
+   print("Filtered Sentence:", filtered_sent)
+   print("\n")
+   ```
+
+   Here, the program removes stopwords from the tokenized sentences. It uses the `stopwords` corpus from NLTK to obtain a set of English stopwords. It then iterates over the tokenized sentences, checks if each word is not a stopword, and adds it to the `filtered_sent` list. Finally, it prints the original tokenized sentence and the filtered sentence without stopwords.
+
+7. Stemming:
+   ```
+   from nltk.stem import PorterStemmer
+
+   ps = PorterStemmer()
+   stemmed_words = []
+   for w in filtered_sent:
+       stemmed_words.append(ps.stem(w))
+   print("Filtered Sentence:", filtered_sent)
+   print("\n")
+   print("Stemmed Sentence:", stemmed_words)
+   print("\n")
+   ```
+
+   In this part, the program applies stemming to the filtered sentence. It uses the PorterStemmer algorithm from NLTK to stem
+
+ each word in the `filtered_sent` list. The stemmed words are stored in the `stemmed_words` list. Finally, it prints the original filtered sentence and the stemmed sentence.
+
+8. Lexicon Normalization:
+   ```
+   from nltk.stem.wordnet import WordNetLemmatizer
+   from nltk.stem.porter import PorterStemmer
+
+   lem = WordNetLemmatizer()
+   stem = PorterStemmer()
+
+   word = "flying"
+   print("Lemmatized Word:", lem.lemmatize(word, "v"))
+   print("\n")
+   print("Stemmed Word:", stem.stem(word))
+   print("\n")
+   ```
+
+   Here, the program performs both stemming and lemmatization on a given word "flying". It uses the WordNetLemmatizer from NLTK to lemmatize the word and the PorterStemmer to stem the word. The lemmatized and stemmed words are printed.
+
+That's the explanation of the program! It covers various text processing tasks such as tokenization, frequency distribution, part-of-speech tagging, stopwords removal, stemming, and lemmatization using the NLTK library.
+//
+The program doesn't use any external dataset. It uses sample text data provided within the program itself. The text data is stored in the variable `text` and includes sentences such as "Hello Mr. Smith, how are you doing today?", "The weather is great, and the city is awesome.", "The sky is pinkish - blue.", and "You should not eat cardboard.".
+
+The purpose of this program is to demonstrate various text processing techniques using the NLTK library. It showcases tasks like tokenization, frequency distribution, part-of-speech tagging, stopwords removal, stemming, and lemmatization using the provided sample text data.
+8----------------------------------------------------------------------------------------------
+Data Visualization I
+1. Use the inbuilt dataset 'titanic'. The dataset contains 891 rows and contains information
+about the passengers who boarded the unfortunate Titanic ship. Use the Seaborn library to
+see if we can find any patterns in the data.
+2. Write a code to check how the price of the ticket (column name: 'fare') for each passenger
+is distributed by plotting a histogram
+//
+Certainly! This program uses the Python libraries `matplotlib` and `seaborn` to create and display visualizations based on the Titanic dataset.
+
+Let's go through the code step by step:
+
+1. Importing the necessary libraries:
+   ```python
+   import matplotlib.pyplot as pyplot
+   import seaborn as sns
+   ```
+   This code imports the `pyplot` module from `matplotlib` and the `seaborn` library.
+
+2. Loading the Titanic dataset:
+   ```python
+   dataset = sns.load_dataset('titanic')
+   ```
+   This line uses the `load_dataset()` function from `seaborn` to load the Titanic dataset into a Pandas DataFrame called `dataset`. The Titanic dataset contains information about passengers on the Titanic, such as their age, fare, and survival status.
+
+3. Printing the head of the dataset:
+   ```python
+   print(dataset.head())
+   ```
+   This line prints the first few rows of the dataset using the `head()` function, giving you a preview of the data.
+
+4. Creating a histogram of the 'fare' column:
+   ```python
+   sns.displot(dataset['fare'], kde=False, bins=10)
+   ```
+   This line uses the `displot()` function from `seaborn` to create a histogram of the 'fare' column in the dataset. The `kde=False` parameter turns off the kernel density estimation plot, and `bins=10` specifies the number of bins in the histogram.
+
+5. Creating a joint plot of 'age' and 'fare':
+   ```python
+   sns.jointplot(x='age', y='fare', data=dataset, kind='hex')
+   ```
+   This line uses the `jointplot()` function from `seaborn` to create a joint plot of the 'age' and 'fare' columns in the dataset. The `x` and `y` parameters specify the columns to be plotted, `data` specifies the dataset, and `kind='hex'` specifies that a hexbin plot should be used to represent the data points.
+
+6. Creating a rug plot of the 'fare' column:
+   ```python
+   sns.rugplot(dataset['fare'])
+   ```
+   This line uses the `rugplot()` function from `seaborn` to create a rug plot of the 'fare' column. A rug plot is a one-dimensional representation of the data points along an axis, with tick marks indicating the presence of a data point.
+
+7. Displaying the plots:
+   ```python
+   pyplot.show()
+   ```
+   This line displays the plots that have been created using `pyplot.show()`.
+
+In summary, this program loads the Titanic dataset, creates a histogram of the fare column, a joint plot of age and fare, and a rug plot of the fare column. The resulting plots are then displayed using `pyplot.show()`.
+//
+The dataset used in this program is the "Titanic" dataset. It is a well-known dataset often used in data analysis and machine learning tasks. The dataset contains information about passengers who were aboard the Titanic during its ill-fated maiden voyage, including their demographic information, ticket details, cabin information, and survival status.
+
+The "Titanic" dataset is available in the `seaborn` library, which provides an easy way to load and use it for various data visualization and analysis tasks. The dataset is provided in a structured format as a Pandas DataFrame, which allows for efficient manipulation and analysis of the data.
+
+The columns in the "Titanic" dataset include:
+
+- `survived`: Survival status of the passenger (0 = No, 1 = Yes)
+- `pclass`: Passenger class (1 = 1st, 2 = 2nd, 3 = 3rd)
+- `sex`: Gender of the passenger
+- `age`: Age of the passenger
+- `sibsp`: Number of siblings/spouses aboard
+- `parch`: Number of parents/children aboard
+- `fare`: Fare paid for the ticket
+- `embarked`: Port of embarkation (C = Cherbourg, Q = Queenstown, S = Southampton)
+- `class`: Passenger class (same as `pclass`)
+- `who`: Identification of adult male, adult female, or child
+- `adult_male`: Boolean indicating if the passenger is an adult male
+- `deck`: Deck where the passenger's cabin was located
+- `embark_town`: Port of embarkation (same as `embarked`)
+- `alive`: Survival status (same as `survived`)
+- `alone`: Boolean indicating if the passenger was traveling alone
+
+These columns provide various attributes of the passengers that can be used for analysis, visualization, and modeling purposes.
+9----------------------------------------------------------------------------------------------
+Data Visualization II
+1. Use the inbuilt dataset 'titanic' as used in the above problem. Plot a box plot for distribution
+of age with respect to each gender along with the information about whether they survived
+or not. (Column names : 'sex' and 'age')
+2. Write observations on the inference from the above statistics.
+//
+Certainly! Let's break down the program step by step:
+
+1. Importing libraries:
+   - The first line of code imports the pandas library as 'pd'. Pandas is a powerful data manipulation library in Python.
+   - The second line imports the seaborn library as 'sns'. Seaborn is a data visualization library that is built on top of Matplotlib and provides a high-level interface for creating informative and attractive statistical graphics.
+   - The third line imports the pyplot module from the Matplotlib library as 'plt'. Matplotlib is a widely used plotting library in Python.
+
+2. Reading the CSV file:
+   - The fourth line reads a CSV file named 'titanic.csv' using the pandas library's `read_csv()` function and assigns the resulting DataFrame to the variable 'df'. A DataFrame is a two-dimensional labeled data structure with columns of potentially different data types, similar to a table in a relational database.
+
+3. Printing the DataFrame:
+   - The sixth line prints the entire DataFrame 'df', which contains the data from the 'titanic.csv' file.
+
+4. Getting column names:
+   - The eighth line assigns the column names of the DataFrame 'df' to the variable 'cols' using the `columns` attribute. This will give you a list of all the column names in the DataFrame.
+
+5. Printing DataFrame information:
+   - The tenth line prints the summary information about the DataFrame using the `info()` method. It provides a concise summary of the DataFrame, including the number of non-null values in each column and the data types of the columns.
+
+6. Printing DataFrame statistics:
+   - The twelfth line prints the statistical summary of the DataFrame using the `describe()` method. It provides various statistical measures such as count, mean, standard deviation, minimum, maximum, and quartiles for numerical columns in the DataFrame.
+
+7. Checking missing values:
+   - The fourteenth line checks for missing values in the DataFrame using the `isnull()` method, which returns a DataFrame of the same shape as 'df' but with Boolean values indicating whether each element is missing or not. The `sum()` method is then applied to count the number of missing values in each column.
+
+8. Creating box plots:
+   - The sixteenth line creates a box plot using the seaborn library's `boxplot()` function. It specifies the 'x' parameter as 'sex' to indicate that the box plot should be grouped by the 'sex' column. The 'y' parameter is set as 'age', which represents the variable to be plotted on the y-axis. The 'data' parameter is set as 'df' to indicate that the data should be taken from the DataFrame 'df'.
+   
+9. Adding hue to the box plot:
+   - The seventeenth line enhances the previous box plot by adding a hue parameter. The 'hue' parameter is set as 'survived' to further group the data by the 'survived' column. This creates separate boxes for each combination of 'sex' and 'survived' values.
+
+10. Displaying the plot:
+    - The eighteenth line uses the `show()` method from the Matplotlib library to display the box plot.
+
+In summary, this program reads a CSV file containing Titanic passenger data, prints the DataFrame, column names, information, and statistics, checks for missing values, and then creates and displays two box plots using the seaborn and matplotlib libraries. The first box plot shows the distribution of ages for each sex, while the second box plot additionally distinguishes survival status using different colors.
+//
+The program uses a dataset stored in a CSV file named 'titanic.csv'. CSV stands for Comma-Separated Values, which is a plain text file format used for storing tabular data. In this case, the 'titanic.csv' file contains data related to the passengers of the Titanic ship.
+
+The dataset is structured as a tabular format, where each row represents a passenger and each column represents a specific attribute or feature of the passenger, such as 'age', 'sex', 'survived', etc. This tabular structure makes it suitable for analysis and manipulation using pandas, a library designed for working with structured data.
+
+Therefore, the dataset used in this program is a structured, tabular dataset stored in a CSV file.
+10----------------------------------------------------------------------------------------------
+Data Visualization III
+Download the Iris flower dataset or any other dataset into a DataFrame. (e.g.,
+https://archive.ics.uci.edu/ml/datasets/Iris ). Scan the dataset and give the inference as:
+1. List down the features and their types (e.g., numeric, nominal) available in the dataset.
+2. Create a histogram for each feature in the dataset to illustrate the feature distributions.
+3. Create a boxplot for each feature in the dataset.
+4. Compare distributions and identify outliers
+
+\\
+
+The given program is an example of data visualization using the matplotlib and seaborn libraries in Python. Let's go through the program step by step to understand what it does:
+
+1. The program begins by importing the necessary libraries: matplotlib, seaborn, pandas, and numpy. These libraries provide functions and tools for data manipulation and visualization.
+
+2. The program reads a CSV file named 'iris.csv' into a pandas DataFrame called `df`. The DataFrame contains the data for the Iris flower dataset.
+
+3. It prints the contents of the DataFrame using the `print(df)` statement.
+
+4. The program determines the number of columns in the DataFrame using the `len()` function and the `list()` function to convert the DataFrame columns into a list. The result is stored in the `column` variable, which is then printed using the `print(column)` statement.
+
+5. The program uses the `df.info()` function to display information about the DataFrame, including the column names, data types, and non-null counts.
+
+6. The program uses the `np.unique()` function from the numpy library to find the unique values in the 'Species' column of the DataFrame. It prints the unique species using the `print(np.unique(df['Species']))` statement.
+
+7. The program uses the `%matplotlib inline` magic command to enable the inline display of matplotlib plots in Jupyter Notebook or JupyterLab.
+
+8. It creates a figure with four subplots arranged in a 2x2 grid using the `plt.subplots()` function. The figure size is set to (16, 8) using the `figsize` parameter.
+
+9. For each subplot, the program sets the title and plots a histogram using the `hist()` function. Each subplot represents the distribution of a different column in the DataFrame.
+
+10. The program creates a list called `data_to_plot`, which contains the four columns of the DataFrame as separate Series objects.
+
+11. It sets the seaborn style to 'whitegrid' using `sns.set_style('whitegrid')`.
+
+12. Another figure is created with the `plt.figure()` function, with a size of (12, 8).
+
+13. An Axes subplot is added to the figure using `fig.add_subplot(111)`.
+
+14. A box plot of the data in `data_to_plot` is created using `ax.boxplot(data_to_plot)`. The box plot displays the quartiles, median, and outliers for each column.
+
+15. The program calls `df.describe()` to compute various summary statistics of the DataFrame and prints the result.
+
+Overall, the program reads the Iris flower dataset, visualizes the distributions of each column using histograms, and displays summary statistics using box plots and descriptive statistics.
+
+\\\
+The dataset used in the program is the Iris flower dataset. The Iris dataset is a popular and widely used dataset in machine learning and statistics. It is a multivariate dataset that contains measurements of four features (sepal length, sepal width, petal length, and petal width) from three different species of Iris flowers (setosa, versicolor, and virginica). Each species is represented by 50 samples, resulting in a total of 150 samples.
+
+The purpose of using the Iris dataset in this program is to demonstrate various data visualization techniques using the matplotlib and seaborn libraries. The program aims to visualize the distributions of the different features in the dataset using histograms and box plots. By visualizing the data, it becomes easier to understand the characteristics and patterns within the dataset.
+
+Additionally, the program prints summary statistics of the dataset using the `df.describe()` function, which provides information such as count, mean, standard deviation, minimum, maximum, and quartiles for each numerical column. This allows for a quick overview of the dataset's central tendency, dispersion, and range.
+
+In summary, the program utilizes the Iris dataset to showcase how to visualize data and gain insights into its distribution and statistical properties using histograms, box plots, and descriptive statistics.
